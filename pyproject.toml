@@ -1,0 +1,10 @@
+[project]
+name = "blogapp"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "fastapi[standard]>=0.115.12",
+    "sqlalchemy[asyncio]>=2.0.41",
+]
