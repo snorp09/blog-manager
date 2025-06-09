@@ -3,10 +3,11 @@ import React, { ButtonHTMLAttributes, useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ArrowDown, Bold, BookType, ChevronDown, Italic, Send, SendHorizonal } from "lucide-react";
+import { PostOutGoing } from "@/lib/Post";
 
 interface PostEditorProps {
-    onTextUpdate: (text: String) => void;
-    onPost: (htmlContent: String) => void;
+    onTextUpdate?: (text: String) => void;
+    onPost: (postInfo: PostOutGoing) => void;
     displaying?: boolean
 }
 
@@ -16,8 +17,10 @@ function HeaderButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {
     return <button {...props} className={classNames} />
 }
 
+
 export default function PostEditor(props: PostEditorProps) {
     const { onTextUpdate } = props;
+
     const [titleText, setTitleText] = useState("");
     const editor = useEditor({
         extensions: [
@@ -36,7 +39,7 @@ export default function PostEditor(props: PostEditorProps) {
                 class: "prose max-w-none bg-base-300 border p-2 rounded h-96",
             }
         },
-        onUpdate: (e) => onTextUpdate(e.editor.getText()),
+        onUpdate: (e) => onTextUpdate ? onTextUpdate(e.editor.getText()) : () => {},
     });
 
     useEffect(() => {
@@ -46,6 +49,16 @@ export default function PostEditor(props: PostEditorProps) {
             editor.commands.setContent("<p>Write your post here...</p>");
         }
     }, [props.displaying])
+
+    function createPost(){
+        const title = titleText;
+        const content = editor?.getHTML();
+        const post: PostOutGoing = {
+            title: title,
+            body: content ? content : ""
+        }
+        return post;
+    }
 
     return (
         <div className="bg-base-200 p-2 rounded flex flex-col gap-4 justify-center">
@@ -67,7 +80,7 @@ export default function PostEditor(props: PostEditorProps) {
                 <EditorContent editor={editor} />
             </div>
             <div className="self-end">
-                <button className="btn btn-primary" onClick={_ => props.onPost(editor?.getHTML() ? editor.getHTML() : "")}>Post<SendHorizonal /></button>
+                <button className="btn btn-primary" onClick={_ => props.onPost(createPost())}>Post<SendHorizonal /></button>
             </div>
         </div>
     )

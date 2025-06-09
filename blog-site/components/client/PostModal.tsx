@@ -4,6 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { SendHorizontal, X } from "lucide-react";
 import PostEditor from "./PostEditor";
+import { PostOutGoing, sendPost } from "@/lib/Post";
 
 interface PostModalProps {
     open: boolean
@@ -25,13 +26,18 @@ export default function PostModal(props: PostModalProps) {
         closeHandler();
     }
 
+    function handlePost(post: PostOutGoing){
+        sendPost(post);
+        dialogClose();
+    }
+
     return (
         <dialog open={open} className="modal" onAnimationEnd={e => console.log("Animation Ended.")} onClose={_ => dialogClose()} ref={dialogRef}>
           <div className="modal-box w-11/12 max-w-5xl">
             <div className="flex justify-end items-center mb-2">
                 <button className="btn btn-error p-1 h-fit" onClick={dialogClose}><X size={24}/></button>
             </div>
-            <PostEditor onPost={() => {}} onTextUpdate={() => {}} displaying={open} />
+            <PostEditor onPost={handlePost} displaying={open} />
           </div>
         </dialog>
     )
