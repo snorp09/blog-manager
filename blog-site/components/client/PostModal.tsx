@@ -2,11 +2,12 @@
 import { useState, useEffect, useRef } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizontal, X } from "lucide-react";
+import PostEditor from "./PostEditor";
 
 interface PostModalProps {
     open: boolean
-    closeHandler: (text: String) => void;
+    closeHandler: () => void;
 }
 
 export default function PostModal(props: PostModalProps) {
@@ -15,31 +16,22 @@ export default function PostModal(props: PostModalProps) {
         extensions: [StarterKit],
         content: "<p>Write your post here...</p>",
         immediatelyRender: false,
-        editorProps: {
-            attributes: {
-                class: "prose border rounded bg-base-100",
-            }
-        }
     });
 
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     function dialogClose(){
         dialogRef.current?.close();
-        closeHandler(editor?.getText() || "");
-        editor?.commands.setContent("<p>Write your post here...</p>")
+        closeHandler();
     }
 
     return (
         <dialog open={open} className="modal" onAnimationEnd={e => console.log("Animation Ended.")} onClose={_ => dialogClose()} ref={dialogRef}>
-          <div className="modal-box">
-            <EditorContent editor={editor} />
-            <div className="modal-action">
-              <button
-                className="btn btn-primary"
-                onClick={_ => dialogClose()}
-                ><SendHorizontal /> Post</button>
+          <div className="modal-box w-11/12 max-w-5xl">
+            <div className="flex justify-end items-center mb-2">
+                <button className="btn btn-error p-1 h-fit" onClick={dialogClose}><X size={24}/></button>
             </div>
+            <PostEditor onPost={() => {}} onTextUpdate={() => {}} displaying={open} />
           </div>
         </dialog>
     )

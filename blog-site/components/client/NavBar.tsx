@@ -12,17 +12,9 @@ export default function NavBar() {
   const [text, setText] = useState<String>(null!);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  function handleModalClose(text: String) {
-    setText(text);
+  function handleModalClose() {
     setModalOpen(false);
   }
-
-  useEffect(() => {
-    if (!text) {
-      return;
-    }
-    console.log(`Current text is: ${text}`)
-  }, [text])
 
   return (
     <div>
